@@ -52,9 +52,10 @@ function populateAllDropdowns() {
     const aliyahDropdowns = document.querySelectorAll("select[id^='aliyah-']");
     let i = 1;
     aliyahDropdowns.forEach(dropdown => {
-        populateDropdown(dropdown);
-        document.getElementById(`aliyah-${i}`).value = "";
-        i++;
+        temp = document.getElementById(`aliyah-${i}`).value
+		populateDropdown(dropdown);
+        document.getElementById(`aliyah-${i}`).value = temp;
+		i++;
     });
 }
 
