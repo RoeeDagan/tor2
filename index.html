@@ -3,33 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>ניהול קוראים</title>
+    <!-- Meta tag for responsive design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link to the responsive stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <label for="parasha_name"> </label>
-        <input type="text" id="parasha_name">
+        <label for="parasha_name">שם הפרשה:</label>
+        <input type="text" id="parasha_name" placeholder="הזן פרשה">
 
-        <label for="aliyah-1">ראשון</label>
-        <select id="aliyah-1"></select>
-
-        <label for="aliyah-2">שני</label>
-        <select id="aliyah-2"></select>
-
-        <label for="aliyah-3">שלישי</label>
-        <select id="aliyah-3"></select>
-
-        <label for="aliyah-4">רביעי</label>
-        <select id="aliyah-4"></select>
-
-        <label for="aliyah-5">חמישי</label>
-        <select id="aliyah-5"></select>
-
-        <label for="aliyah-6">שישי</label>
-        <select id="aliyah-6"></select>
-
-        <label for="aliyah-7">שביעי</label>
-        <select id="aliyah-7"></select>
+        <div class="aliyot-container">
+            <div class="aliyah">
+                <label for="aliyah-1">ראשון</label>
+                <select id="aliyah-1"></select>
+            </div>
+            <div class="aliyah">
+                <label for="aliyah-2">שני</label>
+                <select id="aliyah-2"></select>
+            </div>
+            <div class="aliyah">
+                <label for="aliyah-3">שלישי</label>
+                <select id="aliyah-3"></select>
+            </div>
+            <div class="aliyah">
+                <label for="aliyah-4">רביעי</label>
+                <select id="aliyah-4"></select>
+            </div>
+            <div class="aliyah">
+                <label for="aliyah-5">חמישי</label>
+                <select id="aliyah-5"></select>
+            </div>
+            <div class="aliyah">
+                <label for="aliyah-6">שישי</label>
+                <select id="aliyah-6"></select>
+            </div>
+            <div class="aliyah">
+                <label for="aliyah-7">שביעי</label>
+                <select id="aliyah-7"></select>
+            </div>
+        </div>
 
         <div class="buttons">
             <button id="readers-list-btn">לרשימת הקוראים</button>
@@ -43,6 +56,7 @@
         </div>
     </div>
 
+    <!-- Readers List Modal -->
     <div id="readers-list-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('readers-list-modal')">&times;</span>
@@ -51,340 +65,27 @@
             <button id="add-reader-btn">הוסף קורא...</button>
         </div>
     </div>
-	
-	<div id="bar-mitzvah-modal" class="modal">
-		<div class="modal-content">
-			<span class="close" onclick="closeModal('bar-mitzvah-modal')">&times;</span>
-			<h2>רשימת פרשות בר מצווה</h2>
-			<div id="parasha-list-container"></div>
-			<button id="add-parasha-btn">הוסף פרשה...</button>
-		</div>
-	</div>
 
-	<div id="lastreaders-list-modal" class="modal">
+    <!-- Bar Mitzvah Modal -->
+    <div id="bar-mitzvah-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('bar-mitzvah-modal')">&times;</span>
+            <h2>רשימת פרשות בר מצווה</h2>
+            <div id="parasha-list-container"></div>
+            <button id="add-parasha-btn">הוסף פרשה...</button>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="lastreaders-list-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('lastreaders-list-modal')">&times;</span>
             <h2>הסטוריית קוראים</h2>
             <div id="lastreaders-list-container"></div>
         </div>
     </div>
-	
-    <script>
-        let readers = 	["רועי דגן", "יונה רייכמן"];
-		let last_readers = 	[];
-		let parasha = 	{
-						"שמות"	: ["עופר", "יוסי"],
-						"בראשית": ["עודד", "משה"]
-						};
 
-		let parasha_name = "בראשית";
-		let aliyot_list = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שביעי"];
-		
-        document.addEventListener("DOMContentLoaded", function() {
-            populateAllDropdowns();
-            document.getElementById("clear-btn").addEventListener("click", clearFunc);
-            document.getElementById("history-btn").addEventListener("click", openHistoryListModal);
-            document.getElementById("readers-list-btn").addEventListener("click", openReadersListModal);
-            document.getElementById("archive-btn").addEventListener("click", save_last);
-            document.getElementById("save-btn").addEventListener("click", saveData);
-            document.getElementById("add-reader-btn").addEventListener("click", addReader);
-            document.getElementById("load-btn").addEventListener("click", () => document.getElementById("file-input").click());
-            document.getElementById("file-input").addEventListener("change", loadFile);
-			document.getElementById("bar-mitzvah-btn").addEventListener("click", openBarMitzvahModal);
-            document.getElementById("add-parasha-btn").addEventListener("click", addParasha);
-			loadData();
-        });
-
-        function clearFunc() {
-            const aliyahDropdowns = document.querySelectorAll("select[id^='aliyah-']");
-            i = 1
-			aliyahDropdowns.forEach(dropdown => {
-                document.getElementById(`aliyah-${i}`).value = "";
-				document.getElementById("parasha_name").value = "הזן פרשה";
-				i = i + 1;
-            });
-        }
-		
-		function save_last() {
-            last_readers = [];
-			const aliyahDropdowns = document.querySelectorAll("select[id^='aliyah-']");
-            i = 1
-			aliyahDropdowns.forEach(dropdown => {
-                temp = document.getElementById(`aliyah-${i}`).value
-				last_readers.push(temp);
-				i = i + 1;
-            });
-        }
-
-		function populateAllDropdowns() {
-            const aliyahDropdowns = document.querySelectorAll("select[id^='aliyah-']");
-            i = 1
-			aliyahDropdowns.forEach(dropdown => {
-                temp = document.getElementById(`aliyah-${i}`).value
-				populateDropdown(dropdown);
-				document.getElementById(`aliyah-${i}`).value = temp;
-				i = i + 1;
-            });
-        }
-
-		function populateDropdown(dropdown) {
-			<!-- const specialReaders = ["רועי דגן"]; // רשימת הקוראים המיוחדים שיצבעו באדום -->
-					
-			dropdown.innerHTML = "";
-			
-			readers.forEach(reader => {
-				const option = document.createElement("option");
-				option.value = reader;
-				option.textContent = reader;
-				
-				// אם שם הקורא נמצא ברשימת הקוראים המיוחדים, נוסיף לו את מחלקת הצבע האדום
-				if (last_readers.includes(reader)) {
-					option.classList.add("red-text");
-				}
-
-				dropdown.appendChild(option);
-			});
-		}
-
-		
-        function loadData() {
-            
-			fetch('data.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                	last_readers = data.last_readers || [];
-                    readers = data.readers || [];
-                    parasha = data.parasha || [];
-                    parasha_name = data.parasha_name;
-					populateAllDropdowns();
-                    <!-- document.getElementById("parasha").value = data.parasha; -->
-					document.getElementById("parasha_name").value = data.parasha_name;
-
-                    for (let i = 1; i <= 7; i++) {
-                        document.getElementById(`aliyah-${i}`).value = data.aliyot[`aliyah-${i}`] || '';
-                    }
-				})
-                .catch(error => console.error('Error loading JSON file:', error));
-        }
-
-        function saveData() {
-            <!-- const parasha = document.getElementById("parasha").value; -->
-            
-			const aliyot = {};
-            for (let i = 1; i <= 7; i++) {
-                aliyot[`aliyah-${i}`] = document.getElementById(`aliyah-${i}`).value;
-            }
-
-            const data = {
-                parasha: parasha,
-                aliyot: aliyot,
-				parasha_name : document.getElementById("parasha_name").value,
-                last_readers : last_readers,
-                readers: readers
-            };
-			const jsonString = JSON.stringify(data, null, 2);
-			
-            const blob = new Blob([jsonString], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "data.json";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function openHistoryListModal() {
-            updateLastReadersList();
-            document.getElementById("lastreaders-list-modal").style.display = "block";
-        }
-		
-		function updateLastReadersList() {
-            const container = document.getElementById("lastreaders-list-container");
-            container.innerHTML = "";
-			
-                    
-            for (let index in last_readers) {
-				<!-- console.log("ff"); -->
-				const aliyahItem = document.createElement("div");
-				aliyahItem.className = "parasha-item";
-
-				// יצירת אלמנט לפרשה וצבעה בירוק
-				const aliyahText = document.createElement("span");
-				aliyahText.textContent = aliyot_list[index];
-				aliyahText.style.color = "green";
-				aliyahText.style.fontWeight = "bold";  // הבלטת הפרשה
-		
-				aliyahItem.appendChild(aliyahText);
-
-				// יצירת אלמנט לקוראים וצבעם בשחור
-				const readersText = document.createElement("span");
-				readersText.textContent = last_readers[index];
-				readersText.style.color = "black";
-
-				aliyahItem.appendChild(readersText);
-
-				
-
-				
-				container.appendChild(aliyahItem);
-			}
-        }
-		
-		function openReadersListModal() {
-            updateReadersList();
-            document.getElementById("readers-list-modal").style.display = "block";
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = "none";
-        }
-
-        function updateReadersList() {
-            const container = document.getElementById("readers-list-container");
-            container.innerHTML = "";
-			
-                    
-            readers.forEach((reader, index) => {
-                const readerItem = document.createElement("div");
-                readerItem.className = "reader-item";
-
-                const readerName = document.createElement("span");
-                readerName.textContent = reader;
-
-                const removeButton = document.createElement("button");
-                removeButton.innerHTML = "X";
-                removeButton.onclick = () => {
-                    removeReader(index);
-					populateAllDropdowns(); 
-                };
-
-                readerItem.appendChild(readerName);
-                readerItem.appendChild(removeButton);
-                container.appendChild(readerItem);
-            });
-        }
-
-        function removeReader(index) {
-            readers.splice(index, 1);
-            updateReadersList();
-        }
-
-        function addReader() {
-            const newReader = prompt("הזן שם של קורא חדש:");
-            if (newReader) {
-                readers.push(newReader);
-                updateReadersList();
-                populateAllDropdowns(); 
-            }
-        }
-
-        function loadFile(event) {
-            
-            const file = event.target.files[0];
-            if (file && file.type === "application/json") {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const data = JSON.parse(e.target.result);
-                        last_readers = data.last_readers || [];
-						readers = data.readers || [];
-						parasha = data.parasha || [];
-						parasha_name = data.parasha_name;
-						
-			
-						populateAllDropdowns();
-                        for (let i = 1; i <= 7; i++) {
-                            document.getElementById(`aliyah-${i}`).value = data.aliyot[`aliyah-${i}`] || '';
-                        }
-					    document.getElementById("parasha_name").value = data.parasha_name;
-                    } catch (error) {
-                        console.error('Error parsing JSON file:', error);
-                    }
-                };
-                reader.readAsText(file);
-				
-			} else {
-                alert("Please select a valid JSON file.");
-            }
-        }
-		
-		
-
-		function openBarMitzvahModal() {
-			updateParashaList();
-			document.getElementById("bar-mitzvah-modal").style.display = "block";
-		}
-
-		
-		function updateParashaList() {
-			const container = document.getElementById("parasha-list-container");
-			container.innerHTML = "";
-
-			for (let parashaName in parasha) {
-				const parashaItem = document.createElement("div");
-				parashaItem.className = "parasha-item";
-
-				// יצירת אלמנט לפרשה וצבעה בירוק
-				const parashaText = document.createElement("span");
-				parashaText.textContent = `${parashaName}: `;
-				parashaText.style.color = "green";
-				parashaText.style.fontWeight = "bold";  // הבלטת הפרשה
-		
-				parashaItem.appendChild(parashaText);
-
-				// יצירת אלמנט לקוראים וצבעם בשחור
-				const readersText = document.createElement("span");
-				readersText.textContent = parasha[parashaName].join(", ");
-				readersText.style.color = "black";
-
-				parashaItem.appendChild(readersText);
-
-				const removeButton = document.createElement("button");
-				removeButton.innerHTML = "X";
-				removeButton.onclick = () => {
-					removeParasha(parashaName);
-				};
-
-				parashaItem.appendChild(removeButton);
-				container.appendChild(parashaItem);
-			}
-		}
-
-		
-		
-
-        
-		
-		function removeParasha(parashaName) {
-			delete parasha[parashaName];
-			updateParashaList();
-		}
-
-        
-		
-		function addParasha() {
-			const newParasha = prompt("הזן שם של פרשה חדשה או קיימת:");
-			if (newParasha) {
-				const newReader = prompt("הזן שם של קורא עבור הפרשה:");
-				if (newReader) {
-					if (!parasha[newParasha]) {
-						parasha[newParasha] = [];
-					}
-					parasha[newParasha].push(newReader);
-					updateParashaList();
-				}
-			}
-		}
-
-		
-
-    </script>
+    <!-- Link to the JavaScript file -->
+    <script src="script.js"></script>
 </body>
 </html>
