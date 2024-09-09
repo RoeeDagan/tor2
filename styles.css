@@ -1,87 +1,108 @@
-body {
-    font-family: Arial, sans-serif;
-    direction: rtl;
+/* Reset some default styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-.red-text {
-    color: red;
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    direction: rtl; /* Right-to-left for Hebrew */
+    padding: 20px;
 }
 
 .container {
-    max-width: 25%;
-    margin: auto;
+    background-color: #fff;
     padding: 20px;
-	margin-left: auto;
-	margin-right: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 label {
-    margin-top: 10px;
-}
-
-input, select {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 10px;
-
-}
-
-#parasha_name {
-    width: 80%;
-	height: 30px;
-	margin-bottom: 20px;
-	font-family: 'Arial', sans-serif;
-    font-size: 36px;
+    display: block;
+    margin-bottom: 5px;
     font-weight: bold;
-    color: #E29042;
-    text-align: center;
-    text-transform: uppercase;
-    margin-top: 20px;
-	margin-left: 30px;
-	margin-right: 0px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    /* border-bottom: 2px solid #4A90E2; */
-    /* padding-bottom: 10px; */
-    display: inline-block;
-    background-color: #F0F0F0;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    /* transition: color 0.3s ease, transform 0.3s ease; */
 }
 
-
-
-
-
-.buttons {
-    text-align: center;
-}
-
-button {
-    margin: 5px;
+input[type="text"] {
+    width: 100%;
     padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
+.aliyot-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.aliyah {
+    flex: 1 1 45%; /* Two columns on larger screens */
+    display: flex;
+    flex-direction: column;
+}
+
+.aliyah label {
+    margin-bottom: 5px;
+}
+
+.aliyah select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Buttons Section */
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.buttons button {
+    flex: 1 1 30%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.buttons button:hover {
+    background-color: #0056b3;
+}
+
+/* Modal Styles */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 10% auto;
+    margin: 50px auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 300px;
-    text-align: center;
+    border-radius: 8px;
+    max-width: 600px;
+    position: relative;
 }
 
 .close {
@@ -89,71 +110,70 @@ button {
     float: left;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
     color: black;
-    cursor: pointer;
+    text-decoration: none;
 }
 
-.reader-item {
+.reader-item, .parasha-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #000;
-    padding: 10px;
-	height : 10px;
-    margin-bottom: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
 }
 
-.reader-item button {
-    background: none;
+.reader-item:last-child, .parasha-item:last-child {
+    border-bottom: none;
+}
+
+.reader-item span, .parasha-item span {
+    flex: 1;
+}
+
+.reader-item button, .parasha-item button {
+    background-color: #dc3545;
     border: none;
-    color: red;
-    font-size: 20px;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
     cursor: pointer;
 }
 
-.remove-reader-button {
-    float: right; /* או left אם תרצה להעביר לצד שמאל */
+.reader-item button:hover, .parasha-item button:hover {
+    background-color: #c82333;
 }
 
-#add-reader-btn {
-    background-color: #f0f0f0;
-    border: 1px solid #000;
+.add-button {
+    margin-top: 10px;
     padding: 10px;
-    width: 100%;
-    cursor: pointer;
+    background-color: #28a745;
 }
 
-.parasha-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #000;
-    padding: 10px;
-	height : 10px;
-    margin-bottom: 10px;
+.add-button:hover {
+    background-color: #218838;
 }
 
-.parasha-item button {
-    background: none;
-    border: none;
-    color: red;
-    font-size: 20px;
-    cursor: pointer;
+/* Responsive Design */
+@media (max-width: 600px) {
+    .aliyot-container {
+        flex-direction: column;
+    }
+
+    .aliyah {
+        flex: 1 1 100%;
+    }
+
+    .buttons button {
+        flex: 1 1 100%;
+    }
+
+    .modal-content {
+        margin: 20px;
+        width: auto;
+    }
 }
-
-#add-parasha-btn {
-    background-color: #f0f0f0;
-    border: 1px solid #000;
-    padding: 10px;
-    width: 100%;
-    cursor: pointer;
-}
-
-
-
-
-
